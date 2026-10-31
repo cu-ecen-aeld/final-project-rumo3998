@@ -1,3 +1,4 @@
-This repository contains assignment starter code for buildroot based assignments for the course Advanced Embedded Software Design, ECEN 5713
+final-project-0xBEE5-ClintFurrer
 
-It also contains instructions related to modifying your buildroot project to use with supported hardware platforms. See this wiki page for details. https://github.com/cu-ecen-aeld/buildroot-assignments-base/wiki/Supported-Hardware
+Please see the project overview here:
+https://github.com/0xBEE5-ClintFurrer/Final_Project_Overview_Furrer_Moreno
