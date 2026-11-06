@@ -1,0 +1,3 @@
+[submodule "buildroot"]
+	path = buildroot
+	url = git@github.com:0xBEE5-ClintFurrer/Final_Project_Buildroot_dev.git
