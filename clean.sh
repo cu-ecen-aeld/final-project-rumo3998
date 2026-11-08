@@ -133,7 +133,7 @@ else
 
 	#Parse the input from the command line and save into OPT. read -p allows us to 
 	#specify a prompt.
-	read -p "Select an option [1-6]: " OPT
+	read -p "Select an option [1-7]: " OPT
 
 	case $OPT in 
 		1)
@@ -150,17 +150,18 @@ else
 			echo "Running OPT 3: delete all"
 			if [ $CACHE_EXISTS -eq 1 ]
 			then
-				rm -rf "$CACHE_DIR"/*
+				rm -rf "${CACHE_DIR}"/*
 				echo "Clean all successful"
 			else
 				echo "No cache to clear"
 			fi
 			make distclean
-			echo "Only distclean successful"
+			echo "Make distclean successful"
 			;;
 		4)
 			echo "Running OPT 4: make dirclean"
-			echo "usage: Make <pkg>-dirclean"
+			echo "Usage: Enter the raw package name only 
+			(e.g., busybox, glibc)"
 			read -p "Package name: " PKG
 			if [ -n "$PKG" ]
 			then 
@@ -176,7 +177,7 @@ else
 			#check if dir exists and if so clear it. 
 			if [ -d "$CACHE_DIR" ]
 			then
-				rm -rf "$CACHE_DIR"/*
+				rm -rf "${CACHE_DIR}"/*
 				echo "Cache clean successful"
 			else
 				echo "No Cache to clear"
@@ -198,7 +199,7 @@ else
 fi #end if then for menu
 
 #Ensure file permissions are unaffected and then exit
-chmod 755 clean.sh
+chmod 755 "$0"
 echo "exiting build tools successfully..."
 exit 0
 
