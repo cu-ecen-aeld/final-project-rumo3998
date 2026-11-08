@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #Author: Ruben Moreno
 #Date: November 5th, 2026
@@ -96,7 +96,7 @@ then
 			echo "Cleaning cache..."
 			if [ $CACHE_EXISTS -eq 1 ]
 			then 
-				rm -rf "${CACHE_DIR}"/*
+				rm -rf "${CACHE_DIR:?}"/*
 				echo "Cleaning cache successful"
 			else
 				echo "No cache to clear."
@@ -150,7 +150,7 @@ else
 			echo "Running OPT 3: delete all"
 			if [ $CACHE_EXISTS -eq 1 ]
 			then
-				rm -rf "${CACHE_DIR}"/*
+				rm -rf "${CACHE_DIR:?}"/*
 				echo "Clean all successful"
 			else
 				echo "No cache to clear"
@@ -177,7 +177,7 @@ else
 			#check if dir exists and if so clear it. 
 			if [ -d "$CACHE_DIR" ]
 			then
-				rm -rf "${CACHE_DIR}"/*
+				rm -rf "${CACHE_DIR:?}"/*
 				echo "Cache clean successful"
 			else
 				echo "No Cache to clear"
@@ -188,8 +188,8 @@ else
 			make clean all 
 			echo "Make clean all successful"	
 			;;
-		7)
-			echo "Exiting buildroot cleaning tools"
+		7) 
+			#Do nothing for exit menu option
 			;;
 		*)
 			echo "Error: Invalid selection made"
