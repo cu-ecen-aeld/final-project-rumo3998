@@ -40,7 +40,7 @@ case $BUILD_OPT in
 	1)
 		echo "Running OPT 1: Qemu clean tools"
 		OUTPUT_DIR=$QEMU_DIR
-		DEFCONFIG=qemu_arm_versatile_custom_defconfig
+		DEFCONFIG=qemu_arm_vexpress_custom_defconfig
 		;;
 	2)
 		echo "Running OPT 2: BeagleBone clean tools"
@@ -118,7 +118,7 @@ else
 			#Qemu defconfig
 			make -C "$PROJ_DIR/$BUILDROOT_DIR" O="$(pwd)" \
 				BR2_EXTERNAL="$EXTERNAL_DIR" BR2_DL_DIR="$FILE_CACHE_DIR" \
-				BR2_CCACHE_DIR="$COMPILER_CACHE_DIR" qemu_arm_versatile_defconfig
+				BR2_CCACHE_DIR="$COMPILER_CACHE_DIR" qemu_arm_vexpress_defconfig
 			;;
 		2)
 			#Beaglebone Black defconfig

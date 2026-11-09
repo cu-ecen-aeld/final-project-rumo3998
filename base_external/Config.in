@@ -1,0 +1,4 @@
+# Main external configuration menus
+menu "Custom Tools"
+
+endmenu
