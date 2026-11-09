@@ -6,7 +6,7 @@
 #Configuration
 PROJ_DIR="$(pwd)"
 BUILDROOT_DIR=buildroot/buildroot
-CACHE_DIR=/mnt/DataStorage/ECEN5713/dl
+CACHE_DIR=/mnt/DataStorage/ECEN5713/final-project-rumo3998/.dl
 QEMU_DIR=qemu_build
 BEAGLE_DIR=beaglebone_build
 CACHE_EXISTS=0
@@ -30,6 +30,7 @@ echo "1) Qemu build tools              - Configured to run clean tools on qemu b
 echo
 echo "2) BeagleBone Black build tools  - Configured to run clean tools on BBB builds."
 echo "******************************************************************************"
+echo 
 
 #Parse the input from the command line and save into BUILD_OPT. read -p allows us to 
 #specify a prompt.
@@ -60,8 +61,9 @@ fi
 #the out of build wrapped scripts, by CD to directory and run cmds in directory 
 if [ -d "$OUTPUT_DIR" ] && [ -f "${OUTPUT_DIR}/Makefile" ]
 then
-	echo "INFO: Out of tree build for build: ($OUTPUT_DIR) exists. Run this from the
-	out of tree build directory directly."
+	echo "INFO: Out of tree build for build: ($OUTPUT_DIR) exists. Run this from the"
+	echo "out of tree build directory directly."
+	echo 
 	
 	#Change directory to out of tree build
 	cd "$PROJ_DIR/$OUTPUT_DIR" || exit 1
@@ -70,10 +72,14 @@ else
 
 	#Determine whether to run cleans on cache or dl, where out of tree buids
 	#are not required to have been created to run these tasks
-	if [ -d "$CACHE_DIR" ]
+	if [ $CACHE_EXISTS -eq 1 ]
 	then
 		echo "INFO: Functionality limited, only valid cmd: clean cache."
 		FUNC_LIMITED=1
+	else
+		echo "INFO: Build and cache DNE, no functionality supported."
+		echo
+		exit 0
 	fi
 fi
 
@@ -85,9 +91,10 @@ then
 	echo "|                   Limited clean tool                          |"
 	echo "*****************************************************************"
 	echo "1) Cache clean (rm dl)           - Deletes the dl folder that 
-	holds the downloaded archives"
+	                           holds the downloaded archives"
 	echo "2) Exit                          - Exit cleaning tools menu"
 	echo "*****************************************************************"
+	echo
 
 	#parse the input for the limited clean tool
 	read -p "Select an option [1-2]: " OPT
@@ -105,6 +112,11 @@ then
 		2)
 			echo "Exiting limited clean tools menu."
 			;;
+		*)
+			echo "Error: Invalid selection made"
+			echo 
+			exit 1
+			;;
 	esac
 else
 	#Helper menu
@@ -112,24 +124,26 @@ else
 	echo "|                           Buildroot cleaning tools                         |"
 	echo "******************************************************************************"
 	echo "1) Standard clean (make clean)   - Deletes all compilation artifacts aside 
-	                                   from config and toolchain."
+	                           from config and toolchain."
 	echo
 	echo "2) Better clean (make distclean) - Deletes all compilation artifacts including
-	                                   config and toolchain."
+	                           config and toolchain."
 	echo
 	echo "3) Deep Clean                    - Deletes all compilation artifacts including
-	                                   config and toolchain in addition to clearing 
-					   dl(downloaded archives). disclean + empties cache"
+	                           config and toolchain in addition to clearing 
+				   dl(downloaded archives). disclean + empties 
+				   cache"
 	echo
 	echo "4) Package clean (make dirclean) - Deletes custom packag build files"
 	echo
 	echo "5) Cache clean (rm dl)           - Deletes the dl folder that holds the
-        	                           downloaded archives"
+       	                           downloaded archives"
 	echo
 	echo "6) Fresh build (make clean all)  - Guaranteed clean rebuild, keeps configs"
 	echo 
 	echo "7) Exit                          - Exit Buildroot cleaning tools menu"
 	echo "******************************************************************************"
+	echo
 
 	#Parse the input from the command line and save into OPT. read -p allows us to 
 	#specify a prompt.
@@ -199,7 +213,7 @@ else
 fi #end if then for menu
 
 #Ensure file permissions are unaffected and then exit
-chmod 755 "$0"
-echo "exiting build tools successfully..."
+chmod 755 "$PROJ_DIR/${0##*/}"
+echo "Exiting build tools successfully..."
+echo
 exit 0
-

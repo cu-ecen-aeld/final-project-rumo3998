@@ -3,10 +3,10 @@ qemu_build/
 beaglebone_build/
 
 # Ignore any local download folders if they accidentally get generated locally
-dl/
+.dl/
 
 # Ignore global/local compiler caches
-ccache/
+.ccache/
 .buildroot-ccache/
 
 # Ignore swap files or local text files from your text editor
