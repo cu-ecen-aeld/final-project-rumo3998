@@ -6,7 +6,7 @@
 #Configuration
 PROJ_DIR="$(pwd)"
 BUILDROOT_DIR=buildroot/buildroot
-CACHE_DIR=/mnt/DataStorage/ECEN5713/final-project-rumo3998/.dl
+CACHE_DIR="${PROJ_DIR}/.dl"
 QEMU_DIR=qemu_build
 BEAGLE_DIR=beaglebone_build
 CACHE_EXISTS=0

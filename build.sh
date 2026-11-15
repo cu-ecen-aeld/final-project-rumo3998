@@ -8,7 +8,9 @@ PROJ_DIR="$(pwd)"
 BUILDROOT_DIR=buildroot/buildroot
 FILE_CACHE_DIR="${PROJ_DIR}/.dl"
 COMPILER_CACHE_DIR="${PROJ_DIR}/.ccache"
+TEAMMATE_EXTERNAL_DIR="${PROJ_DIR}/buildroot/base_external"
 EXTERNAL_DIR="${PROJ_DIR}/base_external"
+COMBINED_EXTERNAL="${TEAMMATE_EXTERNAL_DIR}:${EXTERNAL_DIR}"
 QEMU_DIR=qemu_build
 BEAGLE_DIR=beaglebone_build
 
@@ -108,7 +110,7 @@ cd "$PROJ_DIR/$OUTPUT_DIR" || exit 1
 if [ -f "$EXTERNAL_DIR/configs/$DEFCONFIG" ]
 then
 	echo "Applying the custom saved defconfig \"recipe\""
-	make -C "$PROJ_DIR/$BUILDROOT_DIR" O="$(pwd)" BR2_EXTERNAL="$EXTERNAL_DIR" \
+	make -C "$PROJ_DIR/$BUILDROOT_DIR" O="$(pwd)" BR2_EXTERNAL="$COMBINED_EXTERNAL" \
 	       	BR2_DL_DIR="$FILE_CACHE_DIR" BR2_CCACHE_DIR="$COMPILER_CACHE_DIR"  \
 		"$DEFCONFIG"
 else
@@ -117,13 +119,13 @@ else
 		1)
 			#Qemu defconfig
 			make -C "$PROJ_DIR/$BUILDROOT_DIR" O="$(pwd)" \
-				BR2_EXTERNAL="$EXTERNAL_DIR" BR2_DL_DIR="$FILE_CACHE_DIR" \
+				BR2_EXTERNAL="$COMBINED_EXTERNAL" BR2_DL_DIR="$FILE_CACHE_DIR" \
 				BR2_CCACHE_DIR="$COMPILER_CACHE_DIR" qemu_arm_vexpress_defconfig
 			;;
 		2)
 			#Beaglebone Black defconfig
 			make -C "$PROJ_DIR/$BUILDROOT_DIR" O="$(pwd)" \
-				BR2_EXTERNAL="$EXTERNAL_DIR" BR2_DL_DIR="$FILE_CACHE_DIR" \
+				BR2_EXTERNAL="$COMBINED_EXTERNAL" BR2_DL_DIR="$FILE_CACHE_DIR" \
 				BR2_CCACHE_DIR="$COMPILER_CACHE_DIR" beaglebone_defconfig
 			;;
 		*)
