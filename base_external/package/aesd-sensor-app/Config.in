@@ -1,0 +1,5 @@
+config BR2_PACKAGE_AESD_SENSOR_APP
+	bool "aesd-sensor-app"
+	depends on BR2_PACKAGE_LIBGPIOD
+	help
+	  userspace app to interface with sht and mcp sensors

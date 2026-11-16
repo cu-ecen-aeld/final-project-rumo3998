@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#errors fail loudly
+set -e
+
 #Author: Ruben Moreno
 #Date: November 9th, 2026
 

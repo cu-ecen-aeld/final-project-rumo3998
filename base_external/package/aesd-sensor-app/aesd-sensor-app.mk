@@ -1,0 +1,14 @@
+AESD_SENSOR_APP_VERSION = 1.0
+AESD_SENSOR_APP_SITE = $(BR2_EXTERNAL_AESD_PATH)/package/aesd-sensor-app
+AESD_SENSOR_APP_SITE_METHOD = local
+AESD_SENSOR_APP_DEPENDENCIES = libgpiod
+
+define AESD_SENSOR_APP_BUILD_CMDS
+	$(MAKE) CC="$(TARGET_CC)" CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)" -C $(@D) all
+endef
+
+define AESD_SENSOR_APP_INSTALL_TARGET_CMDS
+	$(INSTALL) -D -m 0755 $(@D)/sensor_test $(TARGET_DIR)/usr/bin/sensor_test
+endef
+
+$(eval $(generic-package))

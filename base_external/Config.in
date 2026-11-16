@@ -1,4 +1,4 @@
 # Main external configuration menus
 menu "Custom Tools"
-
+source "$BR2_EXTERNAL_AESD_PATH/package/aesd-sensor-app/Config.in"
 endmenu

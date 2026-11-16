@@ -12,3 +12,6 @@ beaglebone_build/
 # Ignore swap files or local text files from your text editor
 *.swp
 *~
+# Ignore Visual Studio Code settings folder and .qodo
+.vscode/
+.qodo/

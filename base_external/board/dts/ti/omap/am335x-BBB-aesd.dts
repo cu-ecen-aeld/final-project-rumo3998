@@ -1,0 +1,127 @@
+/dts-v1/;
+#include "am335x-boneblack.dts"
+#include <dt-bindings/pinctrl/am33xx.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+
+/* Free the LCD/HDMI pins used by the parallel bus */
+&lcdc     { status = "disabled"; };
+&tda19988 { status = "disabled"; };
+
+&am33xx_pinmux {
+	i2c1_aesd_pins: i2c1-aesd-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_SPI0_CS0, PIN_INPUT_PULLUP, MUX_MODE2) /* P9.17 SCL */
+			AM33XX_PADCONF(AM335X_PIN_SPI0_D1, PIN_INPUT_PULLUP, MUX_MODE2)  /* P9.18 SDA */
+		>;
+	};
+
+    uart4_aesd_pins: uart4-aesd-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_GPMC_WAIT0, PIN_INPUT_PULLUP, MUX_MODE6)  /* P9.11 RX */
+			AM33XX_PADCONF(AM335X_PIN_GPMC_WPN, PIN_OUTPUT, MUX_MODE6) /* P9.13 TX */
+		>;
+	};
+
+	rtc_int_pins: rtc-int-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_GPMC_BEN1, PIN_INPUT_PULLUP, MUX_MODE7) /* P9.12 gpio1_28 */
+		>;
+	};
+
+	
+	mcp_int_pins: mcp-int-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_GPMC_A0, PIN_INPUT_PULLUP, MUX_MODE7) /* P9.15 gpio1_16 */
+		>;
+	};
+
+    parallel_bus_pins: parallel-bus-pins {
+		pinctrl-single,pins = <
+            AM33XX_IOPAD(0x8a0, PIN_OUTPUT | MUX_MODE7)		/* D0 P8.45 gpio2_6  */
+			AM33XX_IOPAD(0x8a4, PIN_OUTPUT | MUX_MODE7)		/* D1 P8.46 gpio2_7  */
+			AM33XX_IOPAD(0x8a8, PIN_OUTPUT | MUX_MODE7)		/* D2 P8.43 gpio2_8  */
+			AM33XX_IOPAD(0x8ac, PIN_OUTPUT | MUX_MODE7)		/* D3 P8.44 gpio2_9  */
+			AM33XX_IOPAD(0x8b0, PIN_OUTPUT | MUX_MODE7)		/* D4 P8.41 gpio2_10 */
+			AM33XX_IOPAD(0x8b4, PIN_OUTPUT | MUX_MODE7)		/* D5 P8.42 gpio2_11 */
+			AM33XX_IOPAD(0x8b8, PIN_OUTPUT | MUX_MODE7)		/* D6 P8.39 gpio2_12 */
+			AM33XX_IOPAD(0x8bc, PIN_OUTPUT | MUX_MODE7)		/* D7 P8.40 gpio2_13 */
+			AM33XX_IOPAD(0x8c0, PIN_OUTPUT_PULLDOWN | MUX_MODE7)		/* lcd_rs p8.37 was lcd8  gpio2_14 */
+			AM33XX_IOPAD(0x8c4, PIN_OUTPUT_PULLDOWN | MUX_MODE7)		/* lcd_r/w   p8.38  was lcd9 gpio2_15 */
+			AM33XX_IOPAD(0x8c8, PIN_OUTPUT_PULLDOWN | MUX_MODE7)		/* lcd_e   p8.36 was lcd_data10 gpio2_16 */
+		>;
+	};
+};
+
+&i2c1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c1_aesd_pins>;
+	clock-frequency = <100000>;
+	status = "okay";
+
+	rtc@68 {
+  		compatible = "maxim,ds3231";
+  		reg = <0x68>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&rtc_int_pins>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
+		wakeup-source;
+  	};
+
+	mcp23017@20 {
+		compatible = "microchip,mcp23017";
+		reg = <0x20>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		microchip,irq-mirror;
+		pinctrl-names = "default";
+		pinctrl-0 = <&mcp_int_pins &mcp_pullups>;
+
+		mcp_pullups: pinmux-mcp-pullups {
+			pins = "gpio0", "gpio1", "gpio2", "gpio3",
+			       "gpio4", "gpio5", "gpio6", "gpio7",
+			       "gpio8", "gpio9", "gpio10", "gpio11",
+			       "gpio12", "gpio13", "gpio14", "gpio15";
+			bias-pull-up;
+		};
+	};
+
+	sht31@44 {
+		compatible = "sensirion,sht3x";
+		reg = <0x44>;
+	};
+
+};
+
+&uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart4_aesd_pins>;
+	status = "okay";
+};
+/ {
+	display-controller {
+		compatible = "hit,hd44780";
+		pinctrl-names = "default";
+		pinctrl-0 = <&parallel_bus_pins>;
+
+		data-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>,
+					<&gpio2 7 GPIO_ACTIVE_HIGH>,
+					<&gpio2 8 GPIO_ACTIVE_HIGH>,
+					<&gpio2 9 GPIO_ACTIVE_HIGH>,
+					<&gpio2 10 GPIO_ACTIVE_HIGH>,
+					<&gpio2 11 GPIO_ACTIVE_HIGH>,
+					<&gpio2 12 GPIO_ACTIVE_HIGH>,
+					<&gpio2 13 GPIO_ACTIVE_HIGH>;
+		rs-gpios = <&gpio2 14 GPIO_ACTIVE_HIGH>;
+		enable-gpios = <&gpio2 16 GPIO_ACTIVE_HIGH>;
+
+		display-height-chars = <2>;
+		display-width-chars = <16>;
+	};
+};
+/* https://claude.ai/chat/db6dcf0a-4540-4f63-9c76-6a0ade15652a */
